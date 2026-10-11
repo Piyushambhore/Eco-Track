@@ -11,79 +11,117 @@
 
 ```mermaid
 flowchart TB
-    subgraph Clients["User Devices & Channels"]
-        Web["Web Dashboard (Responsive Desktop / PWA)"]
-        Mobile["Mobile App (iOS / Android)"]
-        Field["Field Devices (QR / Barcode Scanner, GPS)"]
-    end
-
-    subgraph Edge["Edge & Ingress Security"]
-        R53["Route 53 (DNS)"]
-        CF["CloudFront (CDN Static Assets)"]
-        WAF["AWS WAF (Web Application Firewall)"]
-        ALB["Application Load Balancer (ALB / Ingress HTTPS)"]
-    end
-
-    subgraph VPC["AWS VPC — ap-south-1 (10.0.0.0/16)"]
-        subgraph PublicSubnet["Public Subnets (AZ-A & AZ-B)"]
-            NAT["NAT Gateway (Outbound Internet)"]
-            Bastion["Bastion Host (Secure Maintenance)"]
+    %% ==========================================
+    %% CLIENT LAYER
+    %% ==========================================
+    subgraph ClientLayer["📱 Client Presentation Layer (Android Jetpack Compose)"]
+        direction TB
+        subgraph UI["UI Screens"]
+            AuthUI["AuthScreen\n• Citizen & Recycler Personas\n• Instant Zero-Server Demo"]
+            DashUI["DashboardScreen\n• Clean Impact Stats\n• Quick Action Pipeline"]
+            ScannerUI["ScannerScreen & CameraX\n• ML Visual Detection\n• Auto-Classification"]
+            MapUI["NearbyScreen\n• Leaflet 1.9.4 + OSM Tiles\n• Live OSRM Road Polyline\n• Kolhapur Recycling Hubs"]
+            CollectorUI["CollectorPortalScreen\n• On-Demand Queue\n• Pickup Lifecycle State"]
+            MarketUI["Marketplace & Rewards\n• Recyclables Exchange\n• Eco-Points Ledger"]
+            SettingsUI["SettingsScreen\n• AWS Services Spec Sheet\n• Sync & Offline Controls"]
         end
 
-        subgraph AppSubnet["Private Application Subnets (AZ-A & AZ-B)"]
-            ECS["ECS Fargate: EcoTrack Ktor Monolith Containers"]
-            AutoScaler["Application Auto Scaling (CPU / Memory / Target Tracking)"]
+        subgraph ClientCore["Android Core Engine"]
+            ApiClient["EcoTrackApiClient\n(Ktor HTTP Client)"]
+            LocalCache["Offline Fallback Engine\n(In-Memory Cache & Demo Data)"]
+            CamEngine["CameraX Analyzer\n(Edge Pre-Processing)"]
         end
 
-        subgraph DataSubnet["Private Data Subnets (AZ-A & AZ-B)"]
-            RDSPri[("Amazon RDS PostgreSQL 16 (Primary)")]
-            RDSSec[("Amazon RDS PostgreSQL 16 (Standby Replica)")]
-            ElastiCache[("Amazon ElastiCache Redis (Cache / Throttling)")]
-        end
+        UI --> ClientCore
     end
 
-    subgraph AIML["AI & Asset Layer"]
-        S3[("Amazon S3 (Waste Photos & Certificates)")]
-        Rekognition["Amazon Rekognition (Computer Vision Classification)"]
+    %% ==========================================
+    %% GEOSPATIAL & ROUTING LAYER
+    %% ==========================================
+    subgraph GeoLayer["🗺️ Geospatial & Navigation Engine"]
+        OSM["OpenStreetMap (OSM)\nTile Servers\n(tile.openstreetmap.org)"]
+        OSRM["OSRM Routing Machine\n(router.project-osrm.org)\n• Driving Waypoints\n• Distance & Duration Matrix"]
     end
 
-    subgraph ManagedAWS["Observability & Messaging"]
-        CloudWatch["Amazon CloudWatch (Logs & Metrics)"]
-        SecretsMgr["AWS Secrets Manager (Environment Secrets)"]
-        SNS["Amazon SNS (SMS & Alerts)"]
-        SQS["Amazon SQS (Async Event Queue)"]
-        EventBridge["Amazon EventBridge (Scheduled Tasks)"]
+    MapUI <-->|"Render Street Tiles"| OSM
+    MapUI <-->|"Fetch Live Driving Route & GeoJSON"| OSRM
+
+    %% ==========================================
+    %% INGRESS & EDGE LAYER
+    %% ==========================================
+    subgraph EdgeLayer["🛡️ Edge & Ingress (AWS Cloud)"]
+        R53["Amazon Route 53\n(Global DNS)"]
+        CF["Amazon CloudFront\n(CDN & Edge Cache)"]
+        WAF["AWS WAF\n(DDoS & Bot Mitigation)"]
+        ALB["Application Load Balancer (ALB)\n(TLS Termination & Health Checks)"]
+
+        R53 --> CF --> WAF --> ALB
     end
 
-    subgraph External["External Services"]
-        GoogleMaps["Google Maps API (Geocoding & Matrix)"]
-        EmailGateway["Amazon SES / SendGrid (Transactional Email)"]
-        PaymentGateway["Razorpay / Stripe (Escrow Payments)"]
-        MunicipalAPIs["Municipal ULB Waste Portals"]
+    ApiClient -->|"HTTPS / REST API"| R53
+    ApiClient -.->|"Offline Fallback Mode"| LocalCache
+
+    %% ==========================================
+    %% BACKEND SERVICES LAYER
+    %% ==========================================
+    subgraph BackendLayer["⚙️ Backend Micro-Engine (Ktor Modular Monolith)"]
+        direction TB
+        AuthSvc["AuthService\n(JWT Authentication & RBAC)"]
+        WasteSvc["WasteReportService\n(Inspection & Classification)"]
+        ColSvc["CollectionService\n(Spatial Haversine Matching & Queue)"]
+        MarketSvc["MarketplaceService\n(Listing & Escrow Bidding)"]
+        RewardSvc["RewardsService\n(Double-Entry Ledger)"]
+        ImpactSvc["ImpactService\n(CO2 / Water / Energy Footprint)"]
+        AdminSvc["AdminService\n(Governance & Audit Trail)"]
+
+        ALB -->|"Reverse Proxy / :8080"| BackendLayer
     end
 
-    %% Client Connections
-    Web & Mobile & Field --> R53
-    R53 --> CF
-    CF --> WAF
-    WAF --> ALB
-    ALB --> ECS
+    %% ==========================================
+    %% AWS AI & CLOUD SERVICES
+    %% ==========================================
+    subgraph AwsLayer["☁️ AWS Managed Cloud & AI Services (ap-south-1)"]
+        direction TB
+        Bedrock["Amazon Bedrock (Claude 3 Haiku)\n• Recycling Advice\n• Contamination Advisory"]
+        Rekognition["Amazon Rekognition\n• Computer Vision Labels\n• Waste Material Detection"]
+        S3Bucket["Amazon S3\n• Waste Photo Evidence\n• Compliance Certificates"]
+        Dynamo["Amazon DynamoDB\n• High-Throughput Telemetry\n• Real-Time Collector GPS Pings"]
+        CloudWatch["Amazon CloudWatch\n• Operational Metrics\n• Distributed Logs"]
+        Secrets["AWS Secrets Manager\n• Database Credentials\n• API Secrets"]
+    end
 
-    %% Application Layer Interactions
-    ECS --> S3
-    ECS --> Rekognition
-    ECS --> RDSPri
-    RDSPri -. Synchronous Replication .-> RDSSec
-    ECS --> ElastiCache
-    ECS --> SecretsMgr
-    ECS --> CloudWatch
-    ECS --> SQS
-    SQS --> SNS
-    EventBridge --> ECS
+    WasteSvc -->|"Verify Photo"| Rekognition
+    WasteSvc -->|"Material Insights"| Bedrock
+    WasteSvc -->|"Store Photos"| S3Bucket
+    ColSvc -->|"Collector Pings"| Dynamo
+    BackendLayer -->|"Audit & Metrics"| CloudWatch
+    BackendLayer -->|"Fetch Config"| Secrets
 
-    %% Outbound
-    ECS --> NAT
-    NAT --> GoogleMaps & EmailGateway & PaymentGateway & MunicipalAPIs
+    %% ==========================================
+    %% PERSISTENCE LAYER
+    %% ==========================================
+    subgraph DataLayer["💾 Data Persistence Layer"]
+        Flyway["Flyway Migration Engine\n(V1 to V7 Schema Versioning)"]
+        Exposed["Exposed ORM & HikariCP\n(Connection Pooling)"]
+        Postgres[("Amazon RDS for PostgreSQL 16\n(Multi-AZ Primary & Standby)\n• Users & Recyclers\n• Waste Reports\n• Collections & Facilities\n• Ledger & ESG Records")]
+
+        BackendLayer --> Exposed
+        Flyway --> Postgres
+        Exposed --> Postgres
+    end
+
+    %% Styling
+    classDef client fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#1B5E20;
+    classDef geo fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#0D47A1;
+    classDef backend fill:#FFF3E0,stroke:#E65100,stroke-width:2px,color:#BF360C;
+    classDef aws fill:#EDE7F6,stroke:#512DA8,stroke-width:2px,color:#311B92;
+    classDef db fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#4A148C;
+
+    class ClientLayer,UI,ClientCore client;
+    class GeoLayer,OSM,OSRM geo;
+    class BackendLayer,AuthSvc,WasteSvc,ColSvc,MarketSvc,RewardSvc,ImpactSvc,AdminSvc backend;
+    class AwsLayer,Bedrock,Rekognition,S3Bucket,Dynamo,CloudWatch,Secrets,EdgeLayer,R53,CF,WAF,ALB aws;
+    class DataLayer,Flyway,Exposed,Postgres db;
 ```
 
 ---
