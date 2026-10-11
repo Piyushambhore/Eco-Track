@@ -1,0 +1,41 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+local.properties
+*.zip
+
+# Android
+*.apk
+*.aab
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kotlin / Java
+*.class
+bin/
+
+# Logs
+*.log
+logs/

@@ -1,0 +1,65 @@
+{
+  "family": "ecotrack-api-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecotrack-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecotrack-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "ecotrack-api",
+      "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/ecotrack-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "PORT", "value": "8080" },
+        { "name": "ENVIRONMENT", "value": "production" },
+        { "name": "AWS_REGION", "value": "ap-south-1" },
+        { "name": "DB_PORT", "value": "5432" },
+        { "name": "DB_NAME", "value": "ecotrack" },
+        { "name": "JWT_ISSUER", "value": "https://api.ecotrack.org" },
+        { "name": "JWT_AUDIENCE", "value": "https://app.ecotrack.org" }
+      ],
+      "secrets": [
+        {
+          "name": "DB_HOST",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:ecotrack/prod/db:host::"
+        },
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:ecotrack/prod/db:username::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:ecotrack/prod/db:password::"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:ecotrack/prod/jwt:secret::"
+        }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:8080/health/live || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 20
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ecotrack-api",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

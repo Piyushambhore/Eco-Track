@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EcoTrack – Turn Waste Into Worth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6F0;
+  --tx:#171A16;
+  --mu:#777D74;
+  --br:#B9E769;
+  --dk:#263D24;
+  --bd:#E5E8DE;
+  --ok:#3C7950;
+  --wn:#B98532;
+  --tint:#E8F5CC;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+body{font:400 14px/1.4 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#E9EBE3;color:var(--tx)}
+button{font:inherit;color:inherit;cursor:pointer}
+.top{text-align:center;padding:32px 16px 0}
+.top h1{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.top p{color:var(--mu);margin-top:6px;max-width:680px;margin-inline:auto}
+.grid{display:grid;gap:40px 36px;justify-content:center;padding:28px 16px 56px;--s:1}
+.cell h3{font-size:14px;font-weight:600;margin:0 0 14px 6px}
+.wrap{width:calc(393px*var(--s));height:calc(852px*var(--s))}
+.phone{
+  width:393px;
+  height:852px;
+  border-radius:48px;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  transform:scale(var(--s));
+  transform-origin:0 0;
+  box-shadow:0 0 0 7px #171A16,0 24px 48px rgba(23,26,22,.18);
+  display:flex;
+  flex-direction:column;
+}
+.phone::before{content:"";position:absolute;top:11px;left:50%;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#171A16;z-index:6}
+.sb{flex:none;height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 34px 0;font-weight:600;font-size:15px;z-index:5}
+.hd{flex:none;display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 18px;gap:8px;z-index:5}
+.hd h2{font-size:17px;font-weight:600}
+.rb{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--bd);display:grid;place-items:center;flex:none}
+.bd{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:0 18px 24px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.bd.has-nav{padding-bottom:102px}
+.bd::-webkit-scrollbar{display:none}
+.c{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:14px;box-shadow:0 1px 2px rgba(23,26,22,.04)}
+.c.l{border-radius:24px;padding:18px}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px}
+.sec h4{font-size:16px;font-weight:600}
+.sec a{font-size:13px;font-weight:500;color:var(--ok)}
+.mu{color:var(--mu)}.sm{font-size:12px}
+.b{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;width:100%;border-radius:999px;font-weight:600;font-size:15px;border:1px solid transparent}
+.b.p{background:var(--br);color:var(--dk)}
+.b.s{background:#fff;border-color:var(--bd)}
+.b.d{background:var(--dk);color:#fff}
+.bg{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:99px;font-size:11px;font-weight:500;background:#EEF0E8;white-space:nowrap}
+.bg.ok{background:#E3F0E7;color:var(--ok)}
+.bg.wn{background:#F6EBD6;color:#8A5F18}
+.im{border-radius:14px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:8px;color:rgba(255,255,255,.95);font-size:11px;font-weight:500;flex:none}
+.pl{background:linear-gradient(160deg,#89A7A3,#53737A 55%,#344E52)}
+.cb{background:linear-gradient(160deg,#C5A16F,#A47D4F 60%,#755632)}
+.ew{background:linear-gradient(160deg,#9CA199,#6F756E 60%,#464B45)}
+.st{background:linear-gradient(160deg,#B2BF99,#84966C 60%,#5B6C49)}
+.mt{background:linear-gradient(160deg,#B0ABA0,#847F72 60%,#575247)}
+.og{background:linear-gradient(160deg,#87AB73,#5C8447 60%,#3B5B28)}
+.mx{background:linear-gradient(160deg,#B09A92,#7C665F 60%,#523F39)}
+.row{display:flex;align-items:center;gap:12px}
+.row .f{flex:1;min-width:0}
+.nm{font-weight:600;font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;white-space:nowrap;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.ch{height:34px;padding:0 14px;border-radius:99px;background:#fff;border:1px solid var(--bd);display:inline-flex;align-items:center;font-size:13px;font-weight:500;flex:none}
+.ch.on{background:var(--dk);color:#fff;border-color:var(--dk)}
+.nv{position:absolute;left:18px;right:18px;bottom:22px;height:64px;background:#fff;border:1px solid var(--bd);border-radius:999px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 8px 24px rgba(23,26,22,.08);z-index:5}
+.ni{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--mu);background:none;border:0}
+.ni.on{background:var(--br);color:var(--dk)}
+.ni.sc{width:54px;height:54px;background:var(--br);color:var(--dk);margin-top:-16px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--bd)}
+.vf{height:290px;border-radius:24px;position:relative;background:linear-gradient(160deg,#6E7B66,#434D3E 60%,#2C342A);display:grid;place-items:center;color:rgba(255,255,255,.9);font-size:12px;overflow:hidden}
+.vf s{position:absolute;width:30px;height:30px;border:3px solid #fff;border-radius:8px}
+.vf .a{top:18px;left:18px;border-right:0;border-bottom:0}.vf .b2{top:18px;right:18px;border-left:0;border-bottom:0}
+.vf .c2{bottom:18px;left:18px;border-right:0;border-top:0}.vf .d2{bottom:18px;right:18px;border-left:0;border-top:0}
+.map{height:186px;border-radius:24px;position:relative;overflow:hidden;background:#E9EEDF;border:1px solid var(--bd)}
+.map svg{position:absolute;inset:0}
+.mk{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--br);border:2px solid #fff;display:grid;place-items:center;color:var(--dk);box-shadow:0 2px 6px rgba(23,26,22,.2)}
+.me{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--dk);box-shadow:0 0 0 6px rgba(185,231,105,.6),0 0 0 2px #fff}
+.zm{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.zm span{width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
+.tg{position:absolute;left:10px;bottom:10px;display:flex;background:#fff;border:1px solid var(--bd);border-radius:99px;padding:3px;font-size:12px;font-weight:500}
+.tg span{padding:4px 12px;border-radius:99px;cursor:pointer}.tg .on{background:var(--dk);color:#fff}
+.bar{height:8px;border-radius:99px;background:#EEF0E8;overflow:hidden}.bar i{display:block;height:100%;background:var(--br);border-radius:99px}
+.stat{flex:1;text-align:left}.stat b{display:block;font-size:20px;font-weight:600;letter-spacing:-.01em}.stat span{font-size:11px;color:var(--mu);line-height:1.25;display:block}
+.dv{width:1px;align-self:stretch;background:var(--bd)}
+.wnc{background:#FBF4E4;border-color:#EBD9B0}
+.phone .c.row,.ch{cursor:pointer}
+.phone.hl{animation:hl 1.4s}@keyframes hl{0%,60%{outline:4px solid #B9E769;outline-offset:12px}100%{outline:4px solid transparent;outline-offset:12px}}
+@media (prefers-reduced-motion:reduce){.phone.hl{animation:none}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--dk);color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:100;max-width:90vw;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.2)}.toast.on{opacity:1;transform:translate(-50%,0)}
+.ov{position:absolute;inset:0;background:rgba(23,26,22,.45);z-index:20;display:flex;align-items:flex-end}
+.sh{background:#fff;border-radius:24px 24px 0 0;padding:20px 18px 28px;width:100%;max-height:85%;overflow-y:auto}
+.sh label{display:block;font-size:12px;font-weight:500;color:var(--mu);margin:10px 0 4px}
+.sh select,.sh input,.sh textarea{width:100%;height:44px;border:1px solid var(--bd);border-radius:14px;padding:0 12px;font:inherit;background:#fff;color:var(--tx)}
+.sh textarea{height:64px;padding:10px 12px;resize:none}
+.up{position:absolute;left:16px;right:16px;bottom:16px;background:rgba(23,26,22,.85);color:#fff;border-radius:14px;padding:10px 12px;display:grid;gap:6px;font-size:12px}.up .bar{background:rgba(255,255,255,.25)}
+.sh-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sh-head h3{font-size:18px;font-weight:600}
+.close-btn{background:none;border:0;color:var(--mu);padding:4px;cursor:pointer}
+.lb-rank{width:24px;height:24px;border-radius:50%;background:#EEF0E8;font-size:11px;font-weight:600;display:grid;place-items:center}
+.lb-rank.gold{background:var(--br);color:var(--dk)}
+</style>
+</head>
+<body>
+<header class="top">
+<h1>EcoTrack</h1>
+<p>Turn Waste Into Worth. Six core screens, one connected flow. All numbers, providers, and listings are demo data.</p>
+</header>
+<main class="grid" id="g">
+
+<!-- SCREEN 1: HOME DASHBOARD -->
+<section class="cell"><h3>1. Home Dashboard</h3><div class="wrap"><div class="phone">
+<div class="hd" style="height:56px">
+ <div class="row" style="gap:8px">
+  <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-label="EcoTrack logo" style="flex:none">
+   <circle cx="17" cy="17" r="17" fill="#263D24"/>
+   <path d="M7.5 17 A9.5 9.5 0 1 1 24.5 22.5" stroke="#B9E769" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+   <path d="M22 25 L25.5 22 L22 19" stroke="#B9E769" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+   <path d="M12 21 C12 14 18 10 22 9 C22 13 19 19 12 21 Z" fill="#B9E769"/>
+   <path d="M14 18 C16 16 18 14 20 12" stroke="#263D24" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>
+  <b style="font-weight:600;font-size:17px">EcoTrack</b>
+ </div>
+ <button class="ch" style="height:34px;gap:4px;padding:0 10px;font-size:12px" aria-label="Change location"><i d="pin" s="14"></i><span>Kolhapur, Maharashtra</span><i d="chevd" s="14"></i></button>
+ <span style="width:36px;height:36px;border-radius:50%;background:var(--br);color:var(--dk);display:grid;place-items:center;font-weight:600" aria-label="Profile">P</span>
+</div>
+<div class="bd has-nav">
+ <h1 style="font-size:23px;font-weight:600;letter-spacing:-.02em;margin-top:6px">Make a little difference today.</h1>
+ <p class="mu" style="margin:2px 0 14px">Let's give your waste a better destination.</p>
+ <div class="c l" style="background:var(--tint);border-color:#D6E8AE">
+  <span style="width:44px;height:44px;border-radius:50%;background:var(--dk);color:var(--br);display:grid;place-items:center"><i d="cam" s="22"></i></span>
+  <h3 style="font-size:18px;font-weight:600;margin:12px 0 2px">What are you throwing away?</h3>
+  <p class="mu" style="font-size:13px;margin-bottom:14px">Identify waste and find the right way to dispose of it.</p>
+  <button class="b d"><i d="cam" s="18"></i>Scan your waste</button>
+ </div>
+ <div class="sec"><h4>Your impact</h4><span class="bg">Demo data</span></div>
+ <div class="c row" style="gap:10px;padding:12px">
+  <div class="stat"><b>12 kg</b><span>materials recovered</span></div><div class="dv"></div>
+  <div class="stat"><b>8</b><span>actions completed</span></div><div class="dv"></div>
+  <div class="stat"><b>5</b><span>collection requests</span></div>
+ </div>
+ <div class="sec"><h4>Nearby services</h4><a href="#">See all</a></div>
+ <div class="chips" style="gap:10px">
+  <div class="c row" style="width:262px;padding:10px;flex:none;white-space:normal"><div class="im st" style="width:60px;height:60px">Glass/Paper</div><div class="f"><div class="nm">GreenCycle Recycling</div><div class="mu sm">Paper, cardboard, plastics</div><div class="row" style="gap:6px;margin-top:4px"><span class="sm"><i d="pin" s="12"></i> 1.8 km</span><span class="bg ok"><i d="chk" s="11"></i>Verified</span></div></div></div>
+  <div class="c row" style="width:262px;padding:10px;flex:none;white-space:normal"><div class="im ew" style="width:60px;height:60px">E-Waste</div><div class="f"><div class="nm">E-Waste Collect</div><div class="mu sm">Phones, chargers, cables</div><div class="row" style="gap:6px;margin-top:4px"><span class="sm"><i d="pin" s="12"></i> 3.2 km</span><span class="bg">Demo</span></div></div></div>
+ </div>
+ <div class="sec"><h4>Continue your impact</h4></div>
+ <div class="c row" style="padding:10px"><div class="im pl" style="width:44px;height:44px">Plastic</div><div class="f"><div class="nm">Plastic bottles report</div><span class="bg wn" style="margin-top:2px"><i d="clk" s="11"></i>Request submitted</span></div><i d="chev" s="18"></i></div>
+</div>
+<nav class="nv" data-a="0"></nav>
+</div></div></section>
+
+<!-- SCREEN 2: AI WASTE SCANNER -->
+<section class="cell"><h3>2. AI Waste Scanner</h3><div class="wrap"><div class="phone">
+<div class="hd"><button class="rb" aria-label="Back"><i d="back" s="20"></i></button><h2>Identify waste</h2><button class="rb" aria-label="Help"><i d="help" s="20"></i></button></div>
+<div class="bd">
+ <div class="row" style="margin:6px 0 12px;gap:10px"><span class="sm" style="font-weight:500;white-space:nowrap">Step 1 of 3</span><div class="row f" style="gap:6px"><i style="flex:1;height:5px;border-radius:9px;background:var(--dk)"></i><i style="flex:1;height:5px;border-radius:9px;background:var(--bd)"></i><i style="flex:1;height:5px;border-radius:9px;background:var(--bd)"></i></div></div>
+ <div class="vf"><s class="a"></s><s class="b2"></s><s class="c2"></s><s class="d2"></s><span style="display:flex;flex-direction:column;align-items:center;gap:6px"><i d="cam" s="28"></i>Camera preview</span></div>
+ <h3 style="font-size:16px;font-weight:600;margin:16px 0 2px">Take a clear photo of the item or waste pile.</h3>
+ <p class="mu" style="font-size:13px;margin-bottom:14px">For mixed waste, photograph the pile from a safe distance.</p>
+ <button class="b p"><i d="cam" s="18"></i>Take a photo</button>
+ <button class="b s" style="margin-top:8px"><i d="img" s="18"></i>Upload from gallery</button>
+ <p class="mu sm row" style="gap:6px;margin:12px 0 8px;align-items:flex-start"><i d="info" s="14"></i><span>Your photo is used only to identify waste and recommend suitable disposal options.</span></p>
+ <div class="c wnc row" style="padding:10px 12px;align-items:flex-start;gap:8px;font-size:12px"><i d="warn" s="16"></i><span>Never touch unknown chemicals, sharp objects, or potentially hazardous waste to take a photo.</span></div>
+ <div class="chips" style="margin-top:12px"><span class="ch on">Plastic</span><span class="ch">Paper</span><span class="ch">Metal</span><span class="ch">Glass</span><span class="ch">E-waste</span><span class="ch">Organic</span><span class="ch">Mixed waste</span></div>
+</div>
+</div></div></section>
+
+<!-- SCREEN 3: WASTE ANALYSIS & DISPOSAL -->
+<section class="cell"><h3>3. Waste Analysis &amp; Disposal</h3><div class="wrap"><div class="phone">
+<div class="hd"><button class="rb" aria-label="Back"><i d="back" s="20"></i></button><h2>Waste analysis</h2><button class="rb" aria-label="Share"><i d="share" s="20"></i></button></div>
+<div class="bd">
+ <div class="im pl" style="height:150px;border-radius:24px;margin-top:4px">Photo placeholder</div>
+ <div class="c" style="margin-top:12px">
+  <div class="row" style="justify-content:space-between"><h3 style="font-size:20px;font-weight:600">Plastic bottles</h3><span class="bg">Chosen by you</span></div>
+  <div class="row" style="gap:6px;margin:6px 0"><span class="bg ok"><i d="rec" s="11"></i>Dry recyclable waste</span><span class="bg"><i d="info" s="11"></i>AI classification not connected</span></div>
+  <p class="mu" style="font-size:13px">Empty the bottles and keep them separate from food waste. Local recycling options may differ.</p>
+  <a href="#" style="display:inline-block;margin-top:6px;font-size:13px;font-weight:600;text-decoration:underline">Not right? Change category</a>
+ </div>
+ 
+ <!-- Restrained warning card for hazardous or mixed streams -->
+ <div class="c wnc row warn-card" style="margin-top:10px;padding:10px 12px;align-items:flex-start;gap:8px;font-size:12px;display:none">
+  <i d="warn" s="16"></i><span class="warn-text">Needs specialist collection: Do not mix with household trash.</span>
+ </div>
+
+ <div class="sec"><h4>Recommended next step</h4></div>
+ <button class="b p"><i d="pin" s="18"></i>Find nearby recyclers</button>
+ <div class="row" style="gap:8px;margin-top:8px"><button class="b s" style="font-size:14px">Request a collection</button><button class="b s" style="font-size:14px">Save this report</button></div>
+ <div class="sec" style="margin-top:14px"><h4>Accepted by nearby services</h4></div>
+ <div class="c row" style="padding:10px;margin-bottom:8px" data-prov="GreenCycle Recycling"><div class="im st" style="width:44px;height:44px">Recycle</div><div class="f"><div class="nm">GreenCycle Recycling</div><div class="mu sm">Plastics · 1.8 km</div></div><span class="bg ok"><i d="chk" s="11"></i>Verified</span></div>
+ <div class="c row" style="padding:10px;margin-bottom:10px" data-prov="Metro Scrap Traders"><div class="im mt" style="width:44px;height:44px">Scrap</div><div class="f"><div class="nm">Metro Scrap Traders</div><div class="mu sm">Plastics · 2.6 km</div></div><span class="bg"><i d="clk" s="11"></i>Hours unknown</span></div>
+ <p class="mu sm row" style="gap:6px;align-items:flex-start"><i d="info" s="14"></i><span>AI classification is an estimate. Final acceptance depends on the service provider.</span></p>
+</div>
+</div></div></section>
+
+<!-- SCREEN 4: NEARBY SERVICES & COLLECTION -->
+<section class="cell"><h3>4. Nearby Services &amp; Collection</h3><div class="wrap"><div class="phone">
+<div class="hd"><button class="rb" aria-label="Back"><i d="back" s="20"></i></button><h2>Nearby services</h2><button class="rb" aria-label="Filter"><i d="sl" s="20"></i></button></div>
+<div class="bd has-nav">
+ <div class="c row" style="height:44px;padding:0 14px;border-radius:14px;margin:4px 0 10px"><i d="search" s="18"></i><span class="mu">Search recyclers or collection points</span></div>
+ <div class="chips" style="margin-bottom:10px"><span class="ch on">All</span><span class="ch">Scrap dealers</span><span class="ch">Recycling centres</span><span class="ch">E-waste</span><span class="ch">Collection services</span></div>
+ <div class="map">
+  <svg viewBox="0 0 357 186" width="100%" height="100%" aria-hidden="true"><path d="M0 150 Q90 120 170 140 T357 100 V186 H0Z" fill="#D5E4BD"/><path d="M-10 40 Q120 70 200 30 T370 60" stroke="#CFE0E6" stroke-width="14" fill="none"/><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M0 100 H357" stroke-width="9"/><path d="M120 0 V186" stroke-width="9"/><path d="M250 0 L290 186" stroke-width="7"/><path d="M0 160 L357 50" stroke-width="5"/><path d="M40 0 V100" stroke-width="4"/></g></svg>
+  <span class="me" style="left:170px;top:84px"></span>
+  <span class="mk" style="left:92px;top:60px"><i d="rec" s="15"></i></span><span class="mk" style="left:240px;top:106px"><i d="rec" s="15"></i></span><span class="mk" style="left:200px;top:30px"><i d="rec" s="15"></i></span>
+  <div class="zm"><span><i d="plus" s="16"></i></span><span style="border-top:1px solid var(--bd)"><i d="minus" s="16"></i></span></div>
+  <div class="tg"><span class="on">Map</span><span>List</span></div>
+  <span class="bg" style="position:absolute;right:10px;bottom:10px">Illustrative map</span>
+ </div>
+ <div class="c row" style="margin-top:12px;padding:10px;align-items:flex-start" data-prov="GreenCycle Recycling"><div class="im st" style="width:64px;height:64px">Recycle</div><div class="f"><div class="nm">GreenCycle Recycling</div><div class="mu sm">Recycling centre · 1.8 km away</div><div class="mu sm" style="margin:2px 0 4px">Accepts paper, cardboard and selected plastics</div><div class="row" style="gap:6px"><span class="bg ok"><i d="chk" s="11"></i>Verified</span><span class="bg">Demo provider</span></div></div></div>
+ <div class="c row" style="margin-top:8px;padding:10px;align-items:flex-start" data-prov="E-Waste Collect"><div class="im ew" style="width:64px;height:64px">E-Waste</div><div class="f"><div class="nm">E-Waste Collect</div><div class="mu sm">E-waste collection · 3.2 km away</div><div class="mu sm" style="margin:2px 0 4px">Phones, chargers, small appliances</div><span class="bg"><i d="clk" s="11"></i>Hours not confirmed</span></div></div>
+ <div class="c row" style="margin-top:8px;padding:10px;align-items:flex-start" data-prov="Metro Scrap Traders"><div class="im mt" style="width:64px;height:64px">Scrap</div><div class="f"><div class="nm">Metro Scrap Traders</div><div class="mu sm">Scrap dealer · 2.6 km away</div><div class="mu sm" style="margin:2px 0 4px">Paper, metal, selected hard plastics</div><span class="bg">Demo provider</span></div></div>
+ <button class="b p" style="margin-top:14px">Request a collection</button>
+</div>
+<nav class="nv" data-a="1"></nav>
+</div></div></section>
+
+<!-- SCREEN 5: SCRAP MARKETPLACE -->
+<section class="cell"><h3>5. Scrap Marketplace</h3><div class="wrap"><div class="phone">
+<div class="hd"><h2 style="font-size:20px">Recycle &amp; earn</h2><div class="row" style="gap:8px"><button class="rb" aria-label="Search"><i d="search" s="20"></i></button><button class="rb" aria-label="Notifications"><i d="bell" s="20"></i></button></div></div>
+<div class="bd has-nav">
+ <p class="mu" style="margin:0 0 10px">Give recyclable materials another life.</p>
+ <div class="chips"><span class="ch on">Paper</span><span class="ch">Plastic</span><span class="ch">Metal</span><span class="ch">Glass</span><span class="ch">E-waste</span></div>
+ <div class="c row" style="margin:12px 0;padding:10px 12px;align-items:flex-start;gap:8px;font-size:12px;background:var(--tint);border-color:#D6E8AE"><i d="info" s="16"></i><span>Prices and acceptance depend on material quality, quantity, and local demand.</span></div>
+ <button class="b p"><i d="plus" s="18"></i>List recyclable waste</button>
+ <div class="sec"><h4>Recent listings</h4><span class="bg">Demo data</span></div>
+ <div class="mkt-feed">
+  <div class="c row mkt-item" style="padding:10px;margin-bottom:8px" data-id="LST-101" data-m="Paper" data-qty="8" data-area="Sample location" data-asking="Open to quotes" data-status="Listed"><div class="im cb" style="width:68px;height:68px">Paper</div><div class="f"><div class="nm">Cardboard boxes</div><div class="mu sm">Approx. 8 kg · Pickup area: sample location</div><div class="row" style="gap:4px;margin-top:4px"><span class="bg wn status-badge"><i d="clk" s="11"></i>Listed</span><span class="bg">Demo</span></div></div></div>
+  <div class="c row mkt-item" style="padding:10px;margin-bottom:8px" data-id="LST-102" data-m="Plastic" data-qty="5" data-area="Sample location" data-asking="₹14/kg" data-status="Quoted"><div class="im pl" style="width:68px;height:68px">Plastic</div><div class="f"><div class="nm">Plastic bottles</div><div class="mu sm">Approx. 5 kg · Pickup area: sample location</div><div class="row" style="gap:4px;margin-top:4px"><span class="bg ok status-badge"><i d="chk" s="11"></i>Quoted</span><span class="bg">Demo</span></div></div></div>
+ </div>
+ <div class="sec"><h4>Registered dealers</h4></div>
+ <div class="c row" style="padding:10px"><div class="im mt" style="width:44px;height:44px">Dealer</div><div class="f"><div class="nm">Metro Scrap Traders</div><div class="mu sm">Paper, metal · Quotes available</div></div><span class="bg">Demo</span></div>
+ <p class="mu sm row" style="gap:6px;margin-top:10px;align-items:flex-start"><i d="info" s="14"></i><span>Final quantity and price must be confirmed by the buyer and seller.</span></p>
+</div>
+<nav class="nv" data-a="1"></nav>
+</div></div></section>
+
+<!-- SCREEN 6: IMPACT & REWARDS -->
+<section class="cell"><h3>6. Impact &amp; Rewards</h3><div class="wrap"><div class="phone">
+<div class="hd"><h2 style="font-size:20px">Your impact</h2><button class="rb" aria-label="Settings"><i d="user" s="20"></i></button></div>
+<div class="bd has-nav">
+ <p class="mu" style="margin:0 0 10px">Every verified action counts.</p>
+ <div class="c l" style="padding:14px">
+  <div class="row"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#EEF0E8" stroke-width="8"/><circle cx="32" cy="32" r="26" fill="none" stroke="#B9E769" stroke-width="8" stroke-linecap="round" stroke-dasharray="130.7 163.4" transform="rotate(-90 32 32)"/></svg>
+  <div class="f"><b style="font-size:22px;font-weight:600">8 verified actions</b><div class="mu sm">of 10 reported · sample data</div></div></div>
+  <div class="row" style="gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)"><div class="stat"><b>12 kg</b><span>recovered</span></div><div class="dv"></div><div class="stat"><b>5</b><span>completed collections</span></div><div class="dv"></div><div class="stat"><b>120</b><span>points earned</span></div></div>
+ </div>
+
+ <!-- Separate Totals for Reported, Collected, and Confirmed Recycled -->
+ <div class="sec" style="margin-top:14px"><h4>Material processing totals</h4><span class="bg">Demo totals</span></div>
+ <div class="c row" style="gap:8px;padding:12px;text-align:center">
+  <div class="stat" style="text-align:center"><b style="font-size:18px">18 kg</b><span style="font-size:11px">Reported</span></div><div class="dv"></div>
+  <div class="stat" style="text-align:center"><b style="font-size:18px">14 kg</b><span style="font-size:11px">Collected</span></div><div class="dv"></div>
+  <div class="stat" style="text-align:center"><b style="font-size:18px;color:var(--ok)">12 kg</b><span style="font-size:11px">Confirmed recycled</span></div>
+ </div>
+
+ <div class="sec" style="margin-top:14px"><h4>Collected by material</h4><span class="bg">Sample</span></div>
+ <div class="c" style="padding:12px 14px;display:grid;gap:8px">
+  <div class="row"><span class="sm" style="width:50px">Paper</span><div class="bar f"><i style="width:100%"></i></div><b class="sm" style="width:36px;text-align:right">5 kg</b></div>
+  <div class="row"><span class="sm" style="width:50px">Plastic</span><div class="bar f"><i style="width:80%"></i></div><b class="sm" style="width:36px;text-align:right">4 kg</b></div>
+  <div class="row"><span class="sm" style="width:50px">Metal</span><div class="bar f"><i style="width:40%"></i></div><b class="sm" style="width:36px;text-align:right">2 kg</b></div>
+  <div class="row"><span class="sm" style="width:50px">Other</span><div class="bar f"><i style="width:20%"></i></div><b class="sm" style="width:36px;text-align:right">1 kg</b></div>
+  <div class="row" style="border-top:1px solid var(--bd);padding-top:8px"><span class="bg"><i d="info" s="11"></i>Estimate</span><span class="sm f">≈ 15 kg CO₂e avoided, from documented factors</span></div>
+ </div>
+
+ <!-- Campus Challenge Leaderboard Preview -->
+ <div class="sec" style="margin-top:14px"><h4>Campus challenge</h4><span class="bg">Sample rankings</span></div>
+ <div class="c" style="padding:6px 14px">
+  <div class="row" style="padding:8px 0;border-bottom:1px solid var(--bd)">
+   <span class="lb-rank gold">1</span>
+   <div class="f"><div class="nm" style="font-size:13px">Engineering Block B</div><div class="mu sm">142 kg recovered</div></div>
+   <b class="sm" style="color:var(--ok)">1,420 pts</b>
+  </div>
+  <div class="row" style="padding:8px 0;border-bottom:1px solid var(--bd)">
+   <span class="lb-rank">2</span>
+   <div class="f"><div class="nm" style="font-size:13px">Green Hostel 4</div><div class="mu sm">118 kg recovered</div></div>
+   <b class="sm">1,180 pts</b>
+  </div>
+  <div class="row" style="padding:8px 0;border-bottom:1px solid var(--bd);background:#FAFCF6;border-radius:10px;margin:2px -6px;padding:8px 6px">
+   <span class="lb-rank" style="background:var(--dk);color:#fff">3</span>
+   <div class="f"><div class="nm" style="font-size:13px">Science Annex (You)</div><div class="mu sm">94 kg recovered</div></div>
+   <b class="sm" style="color:var(--dk)">940 pts</b>
+  </div>
+  <div class="row" style="padding:8px 0">
+   <span class="lb-rank">4</span>
+   <div class="f"><div class="nm" style="font-size:13px">Central Library</div><div class="mu sm">76 kg recovered</div></div>
+   <b class="sm">760 pts</b>
+  </div>
+ </div>
+
+ <div class="sec" style="margin:14px 0 6px"><h4>Reward history</h4></div>
+ <div class="c" style="padding:4px 14px">
+  <div class="row" style="padding:7px 0;border-bottom:1px solid var(--bd)"><div class="f"><div class="nm" style="font-size:13px">Cardboard handover confirmed</div><div class="mu sm">4 Oct 2026</div></div><b class="sm">+30 pts</b></div>
+  <div class="row" style="padding:7px 0"><div class="f"><div class="nm" style="font-size:13px">Plastic collection verified</div><div class="mu sm">22 Sep 2026</div></div><b class="sm">+40 pts</b></div>
+ </div>
+ 
+ <div class="row" style="gap:8px;margin:10px 0">
+  <div class="c f" style="padding:8px;text-align:center;font-size:11px;font-weight:500;line-height:1.25"><span style="color:var(--ok)"><i d="chk" s="16"></i></span><br>First verified recycling</div>
+  <div class="c f" style="padding:8px;text-align:center;font-size:11px;font-weight:500;line-height:1.25"><span class="mu"><i d="leaf" s="16"></i></span><br>Community contributor</div>
+  <div class="c f" style="padding:8px;text-align:center;font-size:11px;font-weight:500;line-height:1.25"><span class="mu"><i d="rec" s="16"></i></span><br>Consistent recycler</div>
+ </div>
+ <button class="b p" style="height:44px;margin-bottom:6px">Explore more ways to help</button>
+</div>
+<nav class="nv" data-a="3"></nav>
+</div></div></section>
+
+</main>
+
+<script>
+var P={
+  back:'<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  cam:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  house:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  compass:'<circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-1.8 5.4a2 2 0 0 1-1.3 1.3L7.8 16.2l1.8-5.4a2 2 0 0 1 1.3-1.3z"/>',
+  act:'<path d="M22 12h-2.5a2 2 0 0 0-1.9 1.5l-2.3 8.4a.25.25 0 0 1-.5 0L9.2 2.2a.25.25 0 0 0-.5 0l-2.3 8.4A2 2 0 0 1 4.5 12H2"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  share:'<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  sl:'<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  chk:'<path d="M3.9 8.6a4 4 0 0 1 4.7-4.8 4 4 0 0 1 6.8 0 4 4 0 0 1 4.8 4.8 4 4 0 0 1 0 6.8 4 4 0 0 1-4.8 4.8 4 4 0 0 1-6.8 0 4 4 0 0 1-4.7-4.8 4 4 0 0 1 0-6.8Z"/><path d="m9 12 2 2 4-4"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  warn:'<path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4M12 17h.01"/>',
+  chev:'<path d="m9 18 6-6-6-6"/>',
+  chevd:'<path d="m6 9 6 6 6-6"/>',
+  plus:'<path d="M5 12h14M12 5v14"/>',
+  minus:'<path d="M5 12h14"/>',
+  leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/>',
+  img:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  clk:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  rec:'<path d="M7 19H4.8a1.8 1.8 0 0 1-1.6-2.7L5 13.5"/><path d="m11 19 1.5 0a1.8 1.8 0 0 0 1.5-2.7L11.5 12"/><path d="M16 16l3 3-3 3"/><path d="m8.5 6 2.5-4 2.5 4"/><path d="M14.5 8.5 18 6l2.5 4"/>',
+  close:'<path d="M18 6 6 18M6 6l12 12"/>',
+  tag:'<path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/>'
+};
+
+var N=[['house','Home'],['compass','Explore'],['cam','Scan'],['act','Activity'],['user','Profile']];
+document.querySelectorAll('.nv').forEach(function(n){
+  var a=+n.dataset.a;
+  n.innerHTML=N.map(function(x,i){
+    return '<button class="ni'+(i==a?' on':'')+(i==2?' sc':'')+'" aria-label="'+x[1]+(i==a?' (current)':'')+'"><i d="'+x[0]+'" s="'+(i==2?24:22)+'"></i></button>';
+  }).join('');
+});
+
+document.querySelectorAll('.phone').forEach(function(p){
+  p.insertAdjacentHTML('afterbegin','<div class="sb"><span>9:41</span><svg width="68" height="14" viewBox="0 0 68 14" aria-hidden="true"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/><rect x="30" y="1" width="34" height="13" rx="4" fill="none" stroke="#171A16" opacity=".4"/><rect x="32" y="3" width="26" height="9" rx="2.5"/></svg></div>');
+});
+
+document.querySelectorAll('i[d]').forEach(function(e){
+  var s=e.getAttribute('s')||18;
+  e.outerHTML='<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;vertical-align:-2px">'+P[e.getAttribute('d')]+'</svg>';
+});
+
+function fit(){
+  var w=innerWidth,c=w>=1380?3:w>=950?2:1,s=Math.min(1,(w-32-(c-1)*36-14)/(c*393)),g=document.getElementById('g');
+  g.style.setProperty('--s',s);
+  g.style.gridTemplateColumns='repeat('+c+',auto)';
+}
+fit();
+addEventListener('resize',fit);
+
+(function(){
+var C=[].slice.call(document.querySelectorAll('.cell')),
+    ph=function(i){return C[i].querySelector('.phone')},
+    $=function(p,s){return [].slice.call(p.querySelectorAll(s))};
+
+var T=document.createElement('div');
+T.className='toast';
+T.setAttribute('role','status');
+document.body.appendChild(T);
+var tt,toast=function(m){
+  T.textContent=m;
+  T.classList.add('on');
+  clearTimeout(tt);
+  tt=setTimeout(function(){T.classList.remove('on')},2600);
+};
+
+var go=function(i){
+  C[i].scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+  var p=ph(i);
+  p.classList.remove('hl');
+  void p.offsetWidth;
+  p.classList.add('hl');
+};
+
+var cat='Plastic',img=null,loc='Kolhapur, Maharashtra',notes={};
+
+var K={
+  Plastic:['Plastic bottles','Dry recyclable waste','Empty the bottles and keep them separate from food waste. Local recycling options may differ.',false],
+  Paper:['Paper and cardboard','Dry recyclable waste','Keep it dry and flat, and separate from food waste. Local recycling options may differ.',false],
+  Metal:['Metal items','Dry recyclable waste','Rinse cans and wrap sharp edges. Local recycling options may differ.',false],
+  Glass:['Glass bottles & jars','Dry recyclable waste','Keep glass separate and wrapped so it cannot cut anyone. Local recycling options may differ.',false],
+  'E-waste':['Electronic waste','Needs specialist collection','Do not put it in household waste. Hand it to an authorised e-waste collection service.',true,'Needs specialist collection: Do not mix with household trash. Hand over to authorised e-waste recyclers.'],
+  Organic:['Organic & food waste','Wet waste','Keep it separate from dry waste and use a compost or wet-waste collection.',false],
+  'Mixed waste':['Mixed waste pile','Needs manual segregation','Segregate into dry and wet streams before disposal to improve resource recovery.',true,'Needs manual segregation: Mixed waste cannot be recycled directly. Please separate dry materials from wet organic waste to enable recovery.']
+};
+
+var A={'GreenCycle Recycling':['Plastic','Paper'],'Metro Scrap Traders':['Paper','Metal','Plastic'],'E-Waste Collect':['E-waste']};
+var D={'GreenCycle Recycling':'1.8 km','Metro Scrap Traders':'2.6 km','E-Waste Collect':'3.2 km'};
+var S={'GreenCycle Recycling':'Recycling centres','E-Waste Collect':'E-waste','Metro Scrap Traders':'Scrap dealers'};
+var M={'Cardboard boxes':'Paper','Plastic bottles':'Plastic'};
+var IM={Paper:'cb',Plastic:'pl',Metal:'mt',Glass:'st','E-waste':'ew',Organic:'og','Mixed waste':'mx'};
+
+var PROVIDERS={
+  'GreenCycle Recycling':{
+    name:'GreenCycle Recycling',
+    type:'Recycling centre',
+    dist:'1.8 km away',
+    verified:true,
+    badge:'Verified',
+    accepted:['Paper','Cardboard','Plastics (PET, HDPE)'],
+    area:'Within 5 km radius of central Kolhapur',
+    options:'Doorstep collection (scheduled) · Depot drop-off available',
+    note:'Demo provider · Verified facility standards · Operating hours subject to confirmation'
+  },
+  'E-Waste Collect':{
+    name:'E-Waste Collect',
+    type:'E-waste collection',
+    dist:'3.2 km away',
+    verified:false,
+    badge:'Demo',
+    accepted:['Smartphones','Chargers','Cables','Small appliances'],
+    area:'Kolhapur city municipal limits',
+    options:'Specialised e-waste drives · Authorised depot drop-off',
+    note:'Demo provider · Authorised dismantle partner · Operating hours not confirmed'
+  },
+  'Metro Scrap Traders':{
+    name:'Metro Scrap Traders',
+    type:'Scrap dealer',
+    dist:'2.6 km away',
+    verified:false,
+    badge:'Demo',
+    accepted:['Paper & cardboard','Metals (Iron, Aluminium)','Hard plastics'],
+    area:'Kolhapur industrial belt and residential sectors',
+    options:'Doorstep pickup for batches > 10 kg · Spot digital weighing',
+    note:'Demo provider · Commercial scrap trader · Instant quotation available'
+  }
+};
+
+var o=function(a,v){return a.map(function(x){return '<option'+(x==v?' selected':'')+'>'+x+'</option>'}).join('')};
+var ic=function(n,s){return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px">'+P[n]+'</svg>'};
+var nm=function(c){var e=c.querySelector('.nm');return e&&e.textContent},ty=function(c){return c.dataset.m||S[nm(c)]||M[nm(c)]};
+
+function empty(i,msg,anchor,show){
+  var n=notes[i];
+  if(!n){
+    n=notes[i]=document.createElement('p');
+    n.className='mu sm';
+    n.style.cssText='text-align:center;padding:12px 0';
+  }
+  n.textContent=msg;
+  if(anchor&&anchor.parentNode)anchor.after(n);
+  n.hidden=!show;
+}
+
+function sheet(i,h){
+  var p=ph(i),v=document.createElement('div');
+  v.className='ov';
+  v.innerHTML='<div class="sh">'+h+'</div>';
+  p.appendChild(v);
+  v.onclick=function(e){if(e.target==v)v.remove()};
+  var closeBtn=v.querySelector('.close-btn');
+  if(closeBtn)closeBtn.onclick=function(){v.remove()};
+  return v;
+}
+
+function show3(){
+  var k=K[cat]||K.Plastic,p=ph(2),c=p.querySelector('.c'),b=c.querySelectorAll('.bg');
+  c.querySelector('h3').textContent=k[0];
+  b[0].textContent='Chosen by you';
+  b[1].innerHTML=ic(k[3]?'warn':'rec',11)+'<span>'+k[1]+'</span>';
+  b[1].className='bg '+(k[3]?'wn':'ok');
+  b[2].innerHTML=ic('info',11)+'<span>AI classification not connected</span>';
+  c.querySelector('p').textContent=k[2];
+  
+  // Warning card for hazardous or mixed streams
+  var wc=p.querySelector('.warn-card');
+  if(wc){
+    if(k[3]){
+      wc.style.display='flex';
+      wc.querySelector('.warn-text').textContent=k[4]||k[2];
+    } else {
+      wc.style.display='none';
+    }
+  }
+
+  // Update photo placeholder
+  var im=p.querySelector('.im');
+  if(img){
+    im.style.background='url('+img+') center/cover';
+    im.textContent='';
+  } else {
+    im.className='im '+(IM[cat]||'pl');
+    im.style.background='';
+    im.textContent=cat+' photo (placeholder)';
+  }
+
+  // Filter providers on Screen 3
+  var rs=$(p,'.c.row').filter(nm),n=0;
+  rs.forEach(function(r){
+    var name=nm(r);
+    var a=(A[name]||[]).indexOf(cat)>-1;
+    r.style.display=a?'flex':'none';
+    if(a){
+      n++;
+      r.querySelector('.mu.sm').textContent=cat+' · '+D[name];
+    }
+  });
+  empty(2,'No demo providers accept this category yet.',rs[rs.length-1],!n);
+}
+
+function flt(i,v){
+  var cs=$(ph(i),'.c.row').filter(function(c){return nm(c)&&ty(c)}),n=0;
+  cs.forEach(function(c){
+    var s=v=='All'||ty(c)==v;
+    c.style.display=s?'flex':'none';
+    if(s)n++;
+  });
+  empty(i,i==3?'No demo providers in this category yet.':'No demo listings for this material yet.',cs[cs.length-1],!n);
+}
+
+function chip(i,ch){
+  [].forEach.call(ch.parentNode.children,function(x){x.classList.remove('on')});
+  ch.classList.add('on');
+  var v=ch.textContent.trim();
+  if(i==1){cat=v;show3()}
+  if(i==3||i==4)flt(i,v);
+}
+
+// File input handling
+var inp=document.createElement('input');
+inp.type='file';
+inp.accept='image/*';
+inp.hidden=true;
+document.body.appendChild(inp);
+
+inp.onchange=function(){
+  var f=inp.files[0];
+  inp.value='';
+  if(!f)return;
+  if(!/^image\//.test(f.type)){
+    toast('Choose an image file.');
+    return;
+  }
+  if(img)URL.revokeObjectURL(img);
+  img=URL.createObjectURL(f);
+  var vf=ph(1).querySelector('.vf');
+  vf.style.background='url('+img+') center/cover';
+  vf.querySelector('span').style.display='none';
+  
+  var u=document.createElement('div');
+  u.className='up';
+  u.innerHTML='<span>Preparing photo…</span><div class="bar"><i style="width:0"></i></div>';
+  vf.appendChild(u);
+  var w=0,b=u.querySelector('i'),id=setInterval(function(){
+    w+=14;
+    b.style.width=Math.min(w,100)+'%';
+    if(w>=100){
+      clearInterval(id);
+      u.remove();
+      $(ph(1),'.sm').forEach(function(x){if(/Step/.test(x.textContent))x.textContent='Step 2 of 3'});
+      ph(1).querySelectorAll('.row.f i')[1].style.background='#263D24';
+      show3();
+      go(2);
+      toast('Photo ready. Check the category it was filed under.');
+    }
+  },120);
+};
+
+// Collection Request Sheet
+function col(presetCategory,presetProvider){
+  var selCat=presetCategory||cat;
+  var provNote=presetProvider?'<div class="c row" style="padding:8px 12px;margin:8px 0;background:var(--tint);border-color:#D6E8AE"><span class="sm">Routing to: <b>'+presetProvider+'</b></span></div>':'';
+  var s=sheet(3,'<div class="sh-head"><h3>Request a collection</h3><button class="close-btn" aria-label="Close">'+ic('close',18)+'</button></div>'+provNote+'<label>Waste category</label><select>'+o(Object.keys(K),selCat)+'</select><label>Approximate quantity</label><select>'+o(['Under 5 kg','5 to 10 kg','More than 10 kg'])+'</select><label>Pickup location</label><input value="'+loc+'" placeholder="Enter pickup address"><label>Preferred time slot</label><select>'+o(['Tomorrow morning (9 AM – 12 PM)','Tomorrow evening (4 PM – 7 PM)','This weekend'])+'</select><label>Pickup notes (optional)</label><input placeholder="Landmark, gate, or floor details"><button class="b p" style="margin-top:16px">Submit collection request</button><button class="b s" style="margin-top:8px">Cancel</button>');
+  
+  var f=$(s,'select,input'),bt=$(s,'button');
+  bt[bt.length-1].onclick=function(){s.remove()};
+  
+  // Submit button
+  bt[bt.length-2].onclick=function(){
+    var pickLoc=f[2].value.trim();
+    if(!pickLoc){
+      toast('Enter a pickup location');
+      f[2].focus();
+      return;
+    }
+    var r='ET-'+Math.random().toString(36).slice(2,8).toUpperCase(),selectedMaterial=f[0].value;
+    s.firstChild.innerHTML='<div style="text-align:center;padding:10px 0"><span style="color:var(--ok)">'+ic('chk',40)+'</span><h3 style="font-size:20px;font-weight:600;margin:8px 0 4px">Request submitted</h3><p class="mu sm">Tracking reference</p><b style="font-size:22px;letter-spacing:.02em">'+r+'</b><div style="margin:10px 0"><span class="bg wn">'+ic('clk',11)+'Submitted</span> <span class="bg">Simulated</span></div><p class="mu sm" style="margin:10px 0 18px;line-height:1.4">Simulated request. This prototype has no backend, so no collector has been notified.</p><button class="b p">Done</button></div>';
+    s.querySelector('button').onclick=function(){s.remove()};
+    
+    // Update Home "Continue your impact" card
+    var h=$(ph(0),'.nm').filter(function(x){return /report/.test(x.textContent)})[0];
+    if(h)h.textContent=selectedMaterial+' collection request ('+r+')';
+  };
+}
+
+// Provider Detail Sheet
+function providerDetail(pName){
+  var p=PROVIDER_DETAILS[pName];
+  if(!p)return;
+  var verifiedBadge=p.verified?'<span class="bg ok">'+ic('chk',11)+'Verified</span>':'<span class="bg">Demo provider</span>';
+  var acceptedChips=p.accepted.map(function(m){return '<span class="ch" style="height:28px;font-size:12px;cursor:default">'+m+'</span>'}).join(' ');
+  
+  var h='<div class="sh-head"><h3>'+p.name+'</h3><button class="close-btn" aria-label="Close">'+ic('close',18)+'</button></div>'+
+        '<div class="row" style="gap:8px;margin-bottom:12px">'+verifiedBadge+'<span class="sm mu">'+p.type+' · '+p.dist+'</span></div>'+
+        '<label>Accepted materials</label><div class="chips" style="margin-bottom:10px">'+acceptedChips+'</div>'+
+        '<label>Service area</label><p class="sm" style="margin-bottom:8px">'+p.area+'</p>'+
+        '<label>Collection options</label><p class="sm" style="margin-bottom:8px">'+p.options+'</p>'+
+        '<div class="c wnc row" style="padding:8px 12px;margin:10px 0;font-size:12px"><i d="info" s="16"></i><span>'+p.note+'</span></div>'+
+        '<button class="b p req-prov-btn" style="margin-top:14px">Request a collection from this provider</button>'+
+        '<button class="b s" style="margin-top:8px">Close</button>';
+        
+  var s=sheet(3,h);
+  $(s,'button').forEach(function(btn){
+    if(/Close/.test(btn.textContent))btn.onclick=function(){s.remove()};
+    if(/Request a collection/.test(btn.textContent)){
+      btn.onclick=function(){
+        s.remove();
+        col(cat,p.name);
+      };
+    }
+  });
+}
+
+// Marketplace Listing Creation Sheet
+function lst(){
+  var s=sheet(4,'<div class="sh-head"><h3>List recyclable waste</h3><button class="close-btn" aria-label="Close">'+ic('close',18)+'</button></div>'+
+    '<label>Material</label><select>'+o(Object.keys(IM),'Paper')+'</select>'+
+    '<label>Approximate quantity (kg)</label><input type="number" min="1" step="0.5" placeholder="e.g. 8">'+
+    '<label>Pickup area</label><input value="'+loc+'" placeholder="Area or landmark">'+
+    '<label>Asking price (optional)</label><input placeholder="e.g. ₹12/kg or leave blank to invite quotes">'+
+    '<button class="b p" style="margin-top:16px">List waste</button>'+
+    '<button class="b s" style="margin-top:8px">Cancel</button>');
+  
+  var f=$(s,'select,input'),bt=$(s,'button');
+  bt[bt.length-1].onclick=function(){s.remove()};
+  bt[bt.length-2].onclick=function(){
+    var m=f[0].value,q=parseFloat(f[1].value);
+    if(!(q>0)){
+      toast('Enter an approximate quantity in kg (greater than 0)');
+      f[1].focus();
+      return;
+    }
+    var area=f[2].value.trim()||loc;
+    var asking=f[3].value.trim()||'Open to quotes';
+    var newId='LST-'+Math.floor(100+Math.random()*900);
+    
+    var d=document.createElement('div');
+    d.className='c row mkt-item';
+    d.style.cssText='padding:10px;margin-bottom:8px';
+    d.dataset.id=newId;
+    d.dataset.m=m;
+    d.dataset.qty=q;
+    d.dataset.area=area;
+    d.dataset.asking=asking;
+    d.dataset.status='Listed';
+    
+    d.innerHTML='<div class="im '+(IM[m]||'cb')+'" style="width:68px;height:68px">'+m+'</div>'+
+      '<div class="f"><div class="nm">'+m+' (your listing)</div>'+
+      '<div class="mu sm">Approx. '+q+' kg · Pickup area: '+area+'</div>'+
+      '<div class="row" style="gap:4px;margin-top:4px"><span class="bg wn status-badge">'+ic('clk',11)+'Listed</span> <span class="bg">Simulated</span></div></div>';
+    
+    var feed=ph(4).querySelector('.mkt-feed');
+    if(feed)feed.insertBefore(d,feed.firstChild);
+    s.remove();
+    
+    $(ph(4),'.chips .ch').forEach(function(c){if(c.textContent.trim()==m)chip(4,c)});
+    toast('Listed in this prototype only. Tap card to view dealer quotation flow.');
+  };
+}
+
+// Marketplace Listing Detail & Dealer Quotation Flow Sheet
+function mktDetail(card){
+  var id=card.dataset.id||'LST-101';
+  var m=card.dataset.m||'Paper';
+  var qty=card.dataset.qty||'8';
+  var area=card.dataset.area||'Sample location';
+  var asking=card.dataset.asking||'Open to quotes';
+  var status=card.dataset.status||'Listed';
+  var isAccepted=card.dataset.accepted==='true';
+  
+  function renderContent(){
+    var badgeHtml='',actionsHtml='';
+    if(status==='Listed'){
+      badgeHtml='<span class="bg wn">'+ic('clk',11)+'Listed</span> <span class="bg">Simulated</span>';
+      actionsHtml='<div class="c row" style="padding:10px 12px;background:var(--tint);border-color:#D6E8AE;margin:12px 0">'+
+        '<div class="f"><div class="nm" style="font-size:13px">Metro Scrap Traders (Demo Dealer)</div>'+
+        '<div class="mu sm">Ready to evaluate batch and submit offer</div></div></div>'+
+        '<button class="b p quote-btn">'+ic('tag',16)+'Submit dealer quotation (₹14/kg) (Simulated)</button>';
+    } else if(status==='Quoted'){
+      badgeHtml='<span class="bg ok">'+ic('chk',11)+'Quoted</span> <span class="bg">Simulated</span>';
+      actionsHtml='<div class="c" style="padding:12px;margin:12px 0;border-color:#D6E8AE;background:#FAFCF6">'+
+        '<div class="row" style="justify-content:space-between;margin-bottom:4px"><b style="font-size:14px">Quotation from Metro Scrap Traders</b><span class="bg ok">₹14 / kg</span></div>'+
+        '<div class="mu sm">Estimated total: ₹'+(Math.round(qty*14))+' · Pickup included</div>'+
+        '<p class="mu sm" style="margin-top:6px">Offer valid for 48 hours. Tap accept to lock handover.</p></div>'+
+        '<button class="b p accept-btn">'+ic('chk',16)+'Accept quotation (Simulated)</button>';
+    } else if(status==='Accepted'||status==='Handover pending'){
+      badgeHtml='<span class="bg ok">'+ic('chk',11)+'Accepted</span> <span class="bg wn">'+ic('clk',11)+'Handover pending</span>';
+      actionsHtml='<div class="c" style="padding:12px;margin:12px 0;background:#F5F9F2;border-color:#D6E8AE">'+
+        '<div class="row" style="gap:6px;color:var(--ok);font-weight:600;font-size:13px"><i d="chk" s="16"></i><span>Quotation accepted!</span></div>'+
+        '<p class="mu sm" style="margin:4px 0 8px">Deal locked with Metro Scrap Traders. Rule: listing cannot be accepted twice.</p>'+
+        '<span class="bg">Payment release upon physical weight verification</span></div>'+
+        '<button class="b p complete-btn" style="margin-top:4px">'+ic('chk',16)+'Confirm material handover (Simulated)</button>'+
+        '<button class="b s dispute-btn" style="margin-top:8px;color:#8A5F18">'+ic('warn',16)+'Report dispute (Simulated)</button>';
+    } else if(status==='Completed'){
+      badgeHtml='<span class="bg ok">'+ic('chk',11)+'Completed</span> <span class="bg">Verified</span>';
+      actionsHtml='<div class="c" style="padding:12px;margin:12px 0;background:#E3F0E7;border-color:#C3E3CD">'+
+        '<b style="color:var(--ok);font-size:14px">Transaction successfully completed!</b>'+
+        '<p class="mu sm" style="margin-top:4px">Batch delivered, verified, and +30 eco-points credited to impact ledger.</p></div>';
+    } else if(status==='Disputed'){
+      badgeHtml='<span class="bg wn">'+ic('warn',11)+'Disputed</span> <span class="bg">Under review</span>';
+      actionsHtml='<div class="c wnc" style="padding:12px;margin:12px 0">'+
+        '<b style="color:#8A5F18;font-size:14px">Handover flagged for review</b>'+
+        '<p class="mu sm" style="margin-top:4px">Discrepancy in batch weight or material grade reported. Prototype review pending.</p></div>';
+    }
+    
+    return '<div class="sh-head"><h3>Listing Details ('+id+')</h3><button class="close-btn" aria-label="Close">'+ic('close',18)+'</button></div>'+
+      '<div class="row" style="gap:6px;margin:6px 0 12px">'+badgeHtml+'</div>'+
+      '<div class="c row" style="padding:10px;margin-bottom:10px"><div class="im '+(IM[m]||'cb')+'" style="width:54px;height:54px">'+m+'</div>'+
+      '<div class="f"><b style="font-size:15px">'+m+' batch</b><div class="mu sm">Approx. '+qty+' kg · '+area+'</div><div class="sm" style="margin-top:2px">Asking price: <b>'+asking+'</b></div></div></div>'+
+      '<div class="sec"><h4>Deal status &amp; quotation</h4></div>'+actionsHtml+
+      '<button class="b s close-sheet-btn" style="margin-top:10px">Close</button>';
+  }
+  
+  var s=sheet(4,renderContent());
+  
+  function updateBadgeInFeed(){
+    var badge=card.querySelector('.status-badge');
+    if(!badge)return;
+    if(status==='Listed')badge.outerHTML='<span class="bg wn status-badge">'+ic('clk',11)+'Listed</span>';
+    else if(status==='Quoted')badge.outerHTML='<span class="bg ok status-badge">'+ic('chk',11)+'Quoted</span>';
+    else if(status==='Accepted'||status==='Handover pending')badge.outerHTML='<span class="bg ok status-badge">'+ic('chk',11)+'Accepted</span>';
+    else if(status==='Completed')badge.outerHTML='<span class="bg ok status-badge">'+ic('chk',11)+'Completed</span>';
+    else if(status==='Disputed')badge.outerHTML='<span class="bg wn status-badge">'+ic('warn',11)+'Disputed</span>';
+    card.dataset.status=status;
+    card.dataset.accepted=isAccepted?'true':'false';
+  }
+  
+  s.onclick=function(e){
+    if(e.target==s||e.target.closest('.close-btn')||e.target.closest('.close-sheet-btn')){
+      s.remove();
+      return;
+    }
+    if(e.target.closest('.quote-btn')){
+      status='Quoted';
+      updateBadgeInFeed();
+      s.querySelector('.sh').innerHTML=renderContent();
+      toast('Dealer quotation ₹14/kg submitted by Metro Scrap Traders (Simulated).');
+      return;
+    }
+    if(e.target.closest('.accept-btn')){
+      if(isAccepted){
+        toast('Listing has already been accepted.');
+        return;
+      }
+      status='Accepted';
+      isAccepted=true;
+      updateBadgeInFeed();
+      s.querySelector('.sh').innerHTML=renderContent();
+      toast('Quotation accepted! Handover is now pending.');
+      return;
+    }
+    if(e.target.closest('.complete-btn')){
+      status='Completed';
+      updateBadgeInFeed();
+      s.querySelector('.sh').innerHTML=renderContent();
+      toast('Handover completed and verified (Simulated).');
+      return;
+    }
+    if(e.target.closest('.dispute-btn')){
+      status='Disputed';
+      updateBadgeInFeed();
+      s.querySelector('.sh').innerHTML=renderContent();
+      toast('Listing flagged as disputed for manual verification.');
+      return;
+    }
+  };
+}
+
+// Area Selector Sheet
+function area(){
+  var s=sheet(0,'<div class="sh-head"><h3>Choose your area</h3><button class="close-btn" aria-label="Close">'+ic('close',18)+'</button></div>'+
+    ['Kolhapur, Maharashtra','Sangli, Maharashtra','Pune, Maharashtra','Mumbai, Maharashtra'].map(function(c){
+      return '<button class="b s" style="margin-top:8px">'+c+'</button>';
+    }).join(''));
+  
+  $(s,'button').forEach(function(b){
+    if(b.classList.contains('close-btn'))return;
+    b.onclick=function(){
+      loc=b.textContent;
+      var h=ph(0).querySelector('.hd .ch span');
+      if(h)h.textContent=loc;
+      s.remove();
+      toast('Location updated to '+loc);
+    };
+  });
+}
+
+var NA='Not part of this prototype';
+
+// Master Click Delegation
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.closest('.ov'))return;
+  var p=t.closest('.phone');
+  if(!p)return;
+  var i=C.indexOf(p.parentNode.parentNode);
+  
+  var ch=t.closest('.chips .ch');
+  if(ch){chip(i,ch);return}
+  
+  var tg=t.closest('.tg span');
+  if(tg){
+    $(tg.parentNode,'span').forEach(function(x){x.classList.toggle('on',x==tg)});
+    ph(3).querySelector('.map').style.display=tg.textContent=='List'?'none':'';
+    return;
+  }
+  
+  var n=t.closest('.ni');
+  if(n){
+    var x=[].indexOf.call(n.parentNode.children,n);
+    if(x==4)toast(NA);
+    else go([0,3,1,5][x]);
+    return;
+  }
+  
+  // Provider card click on Screen 4 or Screen 3
+  var provCard=t.closest('[data-prov]');
+  if(provCard&&(i==3||i==2)){
+    e.preventDefault();
+    providerDetail(provCard.dataset.prov);
+    return;
+  }
+
+  // Marketplace item card click on Screen 5
+  var mktCard=t.closest('.mkt-item');
+  if(mktCard&&i==4){
+    e.preventDefault();
+    mktDetail(mktCard);
+    return;
+  }
+  
+  var b=t.closest('button,a,.c.row');
+  if(!b)return;
+  e.preventDefault();
+  var s=b.getAttribute('aria-label')||b.textContent.trim();
+  
+  if(/Back/.test(s)){
+    go(Math.max(0,i-1));
+    return;
+  }
+  
+  if(i==0){
+    if(/Change location|Kolhapur|Sangli|Pune|Mumbai/.test(s))area();
+    else if(/Scan your/.test(s))go(1);
+    else if(/See all|GreenCycle|E-Waste/.test(s))go(3);
+    else if(/report/.test(s))go(2);
+    else if(/recovered|completed|requests/.test(s))go(5);
+  }
+  
+  if(i==1){
+    if(/Help/.test(s))toast('Pick a category, then take or upload a photo.');
+    else if(/Take a photo/.test(s)){inp.setAttribute('capture','environment');inp.click()}
+    else if(/Upload/.test(s)){inp.removeAttribute('capture');inp.click()}
+  }
+  
+  if(i==2){
+    if(/Share/.test(s)){
+      if(navigator.share)navigator.share({text:K[cat][0]+': '+K[cat][1]}).catch(function(){});
+      else toast('Sharing is not available in this browser');
+    }
+    else if(/Find nearby/.test(s))go(3);
+    else if(/Request a collection/.test(s))col(cat);
+    else if(/Save this/.test(s))toast('Report saved for this session');
+    else if(/Change category/.test(s)){go(1);toast('Pick the right category under the camera')}
+  }
+  
+  if(i==3){
+    if(/Filter/.test(s))toast('Use the chips to filter providers');
+    else if(/Search/.test(s))toast(NA);
+    else if(/Request a collection/.test(s))col();
+  }
+  
+  if(i==4){
+    if(/Search|Notifications/.test(s))toast(NA);
+    else if(/List recyclable/.test(s))lst();
+  }
+  
+  if(i==5){
+    if(/Settings|Profile/.test(s))toast(NA);
+    else if(/Explore more/.test(s))go(4);
+  }
+});
+
+// Initialise Screen 2 category chip active
+ph(1).querySelector('.chips .ch').classList.add('on');
+})();
+</script>
+</body>
+</html>

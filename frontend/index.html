@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoTrack - Track your environmental impact, reduce your carbon footprint, and contribute to a sustainable future.">
+    <title>EcoTrack — Environmental Impact Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal-overlay active">
+        <div class="auth-container">
+            <div class="auth-brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="22" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <path d="M24 8C24 8 16 16 16 24C16 28.4 19.6 32 24 32C28.4 32 32 28.4 32 24C32 16 24 8 24 8Z" fill="url(#logoGrad)"/>
+                        <path d="M20 26C20 26 22 30 24 30C26 30 28 26 28 26" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="4" y1="4" x2="44" y2="44">
+                                <stop stop-color="#34d399"/>
+                                <stop offset="1" stop-color="#06b6d4"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>EcoTrack</h1>
+                <p class="brand-tagline">Track your environmental impact.<br>Build a sustainable future.</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="auth-tab active" onclick="showAuthTab('login')">Sign In</button>
+                <button id="registerTab" class="auth-tab" onclick="showAuthTab('register')">Create Account</button>
+            </div>
+
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+                    <span>Sign In</span>
+                    <div class="btn-loader" style="display:none"></div>
+                </button>
+                <div id="loginError" class="form-error"></div>
+            </form>
+
+            <form id="registerForm" class="auth-form" style="display:none" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">Display Name</label>
+                    <input type="text" id="regName" placeholder="Jane Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" placeholder="Min 8 characters" minlength="8" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="regBtn">
+                    <span>Create Account</span>
+                    <div class="btn-loader" style="display:none"></div>
+                </button>
+                <div id="registerError" class="form-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app-container" style="display:none">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-icon small">
+                    <svg viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="22" stroke="url(#sideGrad)" stroke-width="3"/>
+                        <path d="M24 8C24 8 16 16 16 24C16 28.4 19.6 32 24 32C28.4 32 32 28.4 32 24C32 16 24 8 24 8Z" fill="url(#sideGrad)"/>
+                        <defs><linearGradient id="sideGrad" x1="4" y1="4" x2="44" y2="44"><stop stop-color="#34d399"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+                    </svg>
+                </div>
+                <span class="brand-text">EcoTrack</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showView('dashboard')" data-view="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showView('scanner')" data-view="scanner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                    <span>AI Scanner</span>
+                </button>
+                <button class="nav-item" onclick="showView('wasteReports')" data-view="wasteReports">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <span>Waste Reports</span>
+                </button>
+                <button class="nav-item" onclick="showView('pickups')" data-view="pickups">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>Recyclers & Pickups</span>
+                </button>
+                <button class="nav-item" onclick="showView('marketplace')" data-view="marketplace">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span>Marketplace</span>
+                </button>
+                <button class="nav-item" onclick="showView('records')" data-view="records">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>Records</span>
+                </button>
+                <button class="nav-item" onclick="showView('add')" data-view="add">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    <span>Add Record</span>
+                </button>
+                <button class="nav-item" onclick="showView('profile')" data-view="profile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Profile</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout" onclick="handleLogout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <header class="topbar">
+                <button class="hamburger" onclick="toggleSidebar()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div class="topbar-greeting">
+                    <h2 id="greetingText">Good evening</h2>
+                    <p id="greetingSubtext">Here's your environmental impact overview</p>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-avatar" id="userAvatar">?</div>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboardView" class="view active">
+                <!-- AI Waste Scanner Hero Banner -->
+                <div class="ai-hero-banner">
+                    <div class="ai-hero-content">
+                        <div class="ai-hero-badge">
+                            <span class="pulse-dot"></span>
+                            <span>AI Vision Classification</span>
+                        </div>
+                        <h3>Turn Waste Into Measurable Worth</h3>
+                        <p>Capture or upload a photo of household or campus waste to detect material category, recyclability confidence, and calculate instant carbon savings.</p>
+                        <div class="ai-hero-actions">
+                            <button class="btn btn-primary" onclick="showView('scanner')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                                Launch AI Scanner
+                            </button>
+                            <button class="btn btn-ghost" onclick="showView('wasteReports')">View Scanned Reports →</button>
+                        </div>
+                    </div>
+                    <div class="ai-hero-visual">
+                        <div class="scanner-hologram">
+                            <div class="holo-ring"></div>
+                            <div class="holo-core">♻️</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card stat-total">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="totalRecords">0</span>
+                            <span class="stat-label">Total Records</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-carbon">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="totalCarbon">0 kg</span>
+                            <span class="stat-label">CO₂ Impact</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-saved">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="carbonSaved">0 kg</span>
+                            <span class="stat-label">CO₂ Saved</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-types">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="activeTypes">0</span>
+                            <span class="stat-label">Active Categories</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Impact by Category</h3>
+                        <div id="categoryChart" class="chart-container">
+                            <div class="chart-placeholder">Add records to see your impact breakdown</div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Environmental Score</h3>
+                        <div id="scoreChart" class="score-container">
+                            <div class="score-ring">
+                                <svg viewBox="0 0 200 200">
+                                    <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12"/>
+                                    <circle id="scoreRing" cx="100" cy="100" r="85" fill="none" stroke="url(#scoreGrad)" stroke-width="12" stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+                                    <defs><linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+                                </svg>
+                                <div class="score-value">
+                                    <span id="ecoScore">0</span>
+                                    <small>/ 100</small>
+                                </div>
+                            </div>
+                            <p class="score-label" id="scoreLabel">Start tracking to build your score</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-section">
+                    <div class="section-header">
+                        <h3>Recent Activity</h3>
+                        <button class="btn btn-ghost" onclick="showView('records')">View All →</button>
+                    </div>
+                    <div id="recentRecords" class="records-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">🌱</div>
+                            <h4>No records yet</h4>
+                            <p>Start tracking your environmental activities</p>
+                            <button class="btn btn-primary" onclick="showView('add')">Add First Record</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Records View -->
+            <section id="recordsView" class="view">
+                <div class="view-header">
+                    <h2>Activity Records</h2>
+                    <div class="view-actions">
+                        <select id="filterType" class="select-input" onchange="loadRecords()">
+                            <option value="">All Categories</option>
+                            <option value="carbon_footprint">🏭 Carbon Footprint</option>
+                            <option value="energy_usage">⚡ Energy Usage</option>
+                            <option value="water_usage">💧 Water Usage</option>
+                            <option value="waste_recycled">♻️ Waste Recycled</option>
+                            <option value="transport">🚗 Transport</option>
+                            <option value="food_consumption">🍽️ Food</option>
+                            <option value="tree_planting">🌳 Tree Planting</option>
+                            <option value="other">📋 Other</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="showView('add')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Add Record
+                        </button>
+                    </div>
+                </div>
+                <div id="recordsList" class="records-list">
+                    <div class="loading-spinner"><div class="spinner"></div></div>
+                </div>
+                <div id="pagination" class="pagination"></div>
+            </section>
+
+            <!-- Add Record View -->
+            <section id="addView" class="view">
+                <div class="view-header">
+                    <h2>Log Environmental Activity</h2>
+                </div>
+                <form id="addRecordForm" class="form-card" onsubmit="handleAddRecord(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordType">Category</label>
+                            <select id="recordType" class="select-input" required>
+                                <option value="">Select category...</option>
+                                <option value="carbon_footprint">🏭 Carbon Footprint</option>
+                                <option value="energy_usage">⚡ Energy Usage</option>
+                                <option value="water_usage">💧 Water Usage</option>
+                                <option value="waste_recycled">♻️ Waste Recycled</option>
+                                <option value="transport">🚗 Transport</option>
+                                <option value="food_consumption">🍽️ Food Consumption</option>
+                                <option value="tree_planting">🌳 Tree Planting</option>
+                                <option value="other">📋 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recordTitle">Title</label>
+                            <input type="text" id="recordTitle" placeholder="e.g., Morning commute by bike" required maxlength="200">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordQuantity">Quantity</label>
+                            <input type="number" id="recordQuantity" step="0.001" min="0" placeholder="0.000">
+                        </div>
+                        <div class="form-group">
+                            <label for="recordUnit">Unit</label>
+                            <select id="recordUnit" class="select-input">
+                                <option value="">Select unit...</option>
+                                <option value="kg">Kilograms (kg)</option>
+                                <option value="g">Grams (g)</option>
+                                <option value="liters">Liters</option>
+                                <option value="ml">Milliliters (ml)</option>
+                                <option value="kwh">Kilowatt-hours (kWh)</option>
+                                <option value="miles">Miles</option>
+                                <option value="km">Kilometers (km)</option>
+                                <option value="hours">Hours</option>
+                                <option value="count">Count</option>
+                                <option value="tons">Tons</option>
+                                <option value="gallons">Gallons</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordDate">Date & Time</label>
+                            <input type="datetime-local" id="recordDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recordCarbonImpact">Carbon Impact (kg CO₂) <small>optional — auto-estimated if blank</small></label>
+                            <input type="number" id="recordCarbonImpact" step="0.01" placeholder="Auto-calculated">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recordNotes">Notes</label>
+                        <textarea id="recordNotes" rows="3" placeholder="Any additional details..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" onclick="showView('dashboard')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="addRecordBtn">
+                            <span>Save Record</span>
+                            <div class="btn-loader" style="display:none"></div>
+                        </button>
+                    </div>
+                    <div id="addRecordError" class="form-error"></div>
+                    <div id="addRecordSuccess" class="form-success"></div>
+                </form>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profileView" class="view">
+                <div class="view-header">
+                    <h2>Profile</h2>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-avatar" id="profileAvatar">?</div>
+                    <div class="profile-info">
+                        <h3 id="profileName">—</h3>
+                        <p id="profileEmail">—</p>
+                        <span class="badge" id="profileStatus">active</span>
+                    </div>
+                </div>
+                <div class="form-card">
+                    <h3>Update Profile</h3>
+                    <form onsubmit="handleUpdateProfile(event)">
+                        <div class="form-group">
+                            <label for="profileDisplayName">Display Name</label>
+                            <input type="text" id="profileDisplayName" placeholder="Your name" maxlength="100">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                        <div id="profileError" class="form-error"></div>
+                        <div id="profileSuccess" class="form-success"></div>
+                    </form>
+                </div>
+
+                <div class="form-card danger-zone">
+                    <h3>API Information</h3>
+                    <p class="subtle-text">Base URL: <code id="apiBaseUrl">http://localhost:8080</code></p>
+                    <p class="subtle-text">API Version: <code>v1</code></p>
+                    <p class="subtle-text">Health: <code>/health/live</code></p>
+                </div>
+            </section>
+
+            <!-- AI Scanner View -->
+            <section id="scannerView" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>AI Waste Scanner</h2>
+                        <p class="subtle-text">Instant material classification, recyclability confidence & carbon estimation</p>
+                    </div>
+                    <div class="view-actions">
+                        <button class="btn btn-ghost" onclick="showView('wasteReports')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            View Saved Reports
+                        </button>
+                    </div>
+                </div>
+
+                <div class="scanner-grid">
+                    <!-- Scanner Upload Card -->
+                    <div class="form-card scanner-card">
+                        <div class="card-head">
+                            <h3>1. Capture or Select Waste</h3>
+                            <span class="badge badge-accent">AI Rekognition Vision</span>
+                        </div>
+                        
+                        <!-- Upload Dropzone -->
+                        <div class="upload-dropzone" id="uploadDropzone" onclick="document.getElementById('wasteImageInput').click()">
+                            <input type="file" id="wasteImageInput" accept="image/*" style="display:none" onchange="handleImageSelected(event)">
+                            <div class="dropzone-content" id="dropzonePrompt">
+                                <div class="dropzone-icon">📸</div>
+                                <p class="dropzone-text"><strong>Click to snap / upload</strong> or drag photo here</p>
+                                <span class="dropzone-hint">Supports JPEG, PNG, WebP up to 10MB</span>
+                            </div>
+                            <div id="imagePreviewContainer" class="image-preview-container" style="display:none">
+                                <img id="imagePreview" src="" alt="Waste Preview">
+                                <div class="scan-laser" id="scanLaser"></div>
+                                <button type="button" class="btn btn-sm btn-ghost remove-img-btn" onclick="event.stopPropagation(); clearSelectedImage();">✕ Remove</button>
+                            </div>
+                        </div>
+
+                        <!-- One-Click Presets for immediate interactive demo -->
+                        <div class="presets-row">
+                            <span class="presets-label">⚡ Interactive Demo Presets:</span>
+                            <div class="presets-pills">
+                                <button type="button" class="preset-pill" onclick="selectPreset('plastic', 'Plastic PET water bottle with cap')">🥤 Plastic Bottle</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('metal', 'Crushed aluminum beverage soda can')">🥫 Aluminum Can</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('paper', 'Corrugated cardboard delivery box')">📦 Cardboard Box</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('e_waste', 'Old broken smartphone with lithium battery')">📱 Smartphone E-Waste</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('glass', 'Clear glass beverage bottle')">🍾 Glass Bottle</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('organic', 'Fruit peels and vegetable kitchen scraps')">🍌 Organic Scraps</button>
+                                <button type="button" class="preset-pill" onclick="selectPreset('hazardous', 'Can of toxic motor oil and solvent')">☣️ Hazardous Chemical</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 1.25rem;">
+                            <label for="scannerHint">Item Description or Clue <small>(optional)</small></label>
+                            <input type="text" id="scannerHint" placeholder="e.g., Plastic soda bottle, cardboard carton...">
+                        </div>
+
+                        <button type="button" class="btn btn-primary btn-full" id="scanBtn" onclick="runWasteScan()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                            <span>Analyze Waste with AI</span>
+                            <div class="btn-loader" id="scanLoader" style="display:none"></div>
+                        </button>
+                    </div>
+
+                    <!-- Scan Results Panel -->
+                    <div class="form-card result-card" id="scanResultCard">
+                        <div class="card-head">
+                            <h3>2. AI Classification Result</h3>
+                        </div>
+
+                        <div class="result-placeholder" id="resultPlaceholder">
+                            <div class="placeholder-icon">🤖</div>
+                            <h4>AI Engine Ready</h4>
+                            <p>Select a quick preset or upload a photo to inspect AI detection confidence, recyclability grade, and carbon avoidance math.</p>
+                        </div>
+
+                        <div id="resultContent" style="display:none">
+                            <div class="result-header">
+                                <div class="badge-group">
+                                    <span class="badge" id="resCategoryBadge">Plastic</span>
+                                    <span class="badge badge-success" id="resRecyclableBadge">Recyclable</span>
+                                </div>
+                                <div class="confidence-badge">
+                                    <strong id="resConfidenceVal">94.5%</strong> Confidence
+                                </div>
+                            </div>
+
+                            <h3 id="resSubType" class="result-subtype">PET Plastic Bottle</h3>
+
+                            <!-- Confidence Meter -->
+                            <div class="confidence-meter-wrap">
+                                <div class="meter-labels">
+                                    <span>AI Detection Confidence</span>
+                                    <span id="meterPercentText">94.5%</span>
+                                </div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill" id="resConfidenceBar" style="width: 94.5%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Highlights Grid -->
+                            <div class="result-highlights">
+                                <div class="highlight-item">
+                                    <span class="highlight-label">Carbon Factor</span>
+                                    <strong id="resCarbonFactor" class="highlight-val text-green">1.50 kg CO₂e / kg</strong>
+                                </div>
+                                <div class="highlight-item">
+                                    <span class="highlight-label">Recommended Action</span>
+                                    <strong id="resRecommendedAction" class="highlight-val">Scrap Dealer Pickup</strong>
+                                </div>
+                            </div>
+
+                            <!-- Guidance Box -->
+                            <div class="guidance-box">
+                                <div class="guidance-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    <span>Segregation & Disposal Guide</span>
+                                </div>
+                                <p id="resDisposalGuide" class="guidance-text">Rinse thoroughly to remove residue. Compress bottle before disposal.</p>
+                            </div>
+
+                            <!-- Save to User Account Form -->
+                            <form id="saveReportForm" class="save-report-form" onsubmit="handleSaveReport(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="reportQty">Estimated Quantity</label>
+                                        <input type="number" id="reportQty" step="0.1" min="0.1" value="1.0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reportUnit">Unit</label>
+                                        <select id="reportUnit" class="select-input">
+                                            <option value="kg">Kilograms (kg)</option>
+                                            <option value="count">Count (items)</option>
+                                            <option value="g">Grams (g)</option>
+                                            <option value="liters">Liters</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions" style="margin-top: 1rem;">
+                                    <button type="submit" class="btn btn-primary btn-full" id="saveReportBtn">
+                                        <span>Save to My Waste Reports</span>
+                                        <div class="btn-loader" id="saveReportLoader" style="display:none"></div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Waste Reports View -->
+            <section id="wasteReportsView" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>My Waste Reports</h2>
+                        <p class="subtle-text">History of AI-scanned waste items and their lifecycle status</p>
+                    </div>
+                    <div class="view-actions">
+                        <select id="filterWasteCategory" class="select-input" onchange="loadWasteReports()">
+                            <option value="">All Materials</option>
+                            <option value="plastic">Plastics</option>
+                            <option value="paper">Paper & Cardboard</option>
+                            <option value="metal">Metals</option>
+                            <option value="e_waste">E-Waste</option>
+                            <option value="glass">Glass</option>
+                            <option value="organic">Organic</option>
+                            <option value="hazardous">Hazardous</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="showView('scanner')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                            New AI Scan
+                        </button>
+                    </div>
+                </div>
+                <div id="wasteReportsList" class="records-list">
+                    <div class="loading-spinner"><div class="spinner"></div></div>
+                </div>
+                <div id="wasteReportsPagination" class="pagination"></div>
+            </section>
+
+            <!-- Recyclers & Pickups View (Phase 3) -->
+            <section id="pickupsView" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Recyclers & On-Demand Logistics</h2>
+                        <p class="subtle-text">Discover certified recycling depots, scrap aggregators, and book doorstep zero-waste pickups</p>
+                    </div>
+                    <div class="view-actions">
+                        <button class="btn btn-secondary" onclick="fetchNearbyFacilitiesWithGps()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+                            Nearby (GPS)
+                        </button>
+                        <button class="btn btn-primary" onclick="openScheduleModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Schedule Pickup
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logistics Sub-tabs -->
+                <div class="logistics-tabs">
+                    <button id="tabFacilities" class="logistics-tab active" onclick="switchLogisticsTab('facilities')">
+                        Verified Recycling Hubs (<span id="facilitiesCount">5</span>)
+                    </button>
+                    <button id="tabCollections" class="logistics-tab" onclick="switchLogisticsTab('collections')">
+                        My Scheduled Pickups (<span id="collectionsCount">0</span>)
+                    </button>
+                </div>
+
+                <!-- Facilities Tab Pane -->
+                <div id="facilitiesPane" class="logistics-pane active">
+                    <div class="filter-chips-bar">
+                        <span class="chips-label">Accepted Material:</span>
+                        <div class="chips-group" id="materialFilterChips">
+                            <button class="chip active" data-mat="" onclick="filterFacilitiesByMaterial('')">All Materials</button>
+                            <button class="chip" data-mat="plastic" onclick="filterFacilitiesByMaterial('plastic')">Plastic</button>
+                            <button class="chip" data-mat="paper" onclick="filterFacilitiesByMaterial('paper')">Paper</button>
+                            <button class="chip" data-mat="metal" onclick="filterFacilitiesByMaterial('metal')">Metals</button>
+                            <button class="chip" data-mat="e_waste" onclick="filterFacilitiesByMaterial('e_waste')">E-Waste</button>
+                            <button class="chip" data-mat="glass" onclick="filterFacilitiesByMaterial('glass')">Glass</button>
+                            <button class="chip" data-mat="organic" onclick="filterFacilitiesByMaterial('organic')">Organic</button>
+                        </div>
+                    </div>
+
+                    <div id="facilitiesGrid" class="facilities-grid">
+                        <div class="loading-spinner"><div class="spinner"></div></div>
+                    </div>
+                </div>
+
+                <!-- Collections Tab Pane -->
+                <div id="collectionsPane" class="logistics-pane" style="display: none;">
+                    <div id="collectionsList" class="collections-list">
+                        <div class="loading-spinner"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Circular Marketplace View (Phase 4) -->
+            <section id="marketplaceView" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2>Circular Marketplace & Material Trading</h2>
+                        <p class="subtle-text">Trade commercial recyclable lots, surplus scrap feedstock, and negotiate direct dealer bids</p>
+                    </div>
+                    <div class="view-actions">
+                        <button class="btn btn-primary" onclick="openCreateListingModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            List Recyclable Batch
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Market Ticker Stats -->
+                <div class="marketplace-stats-bar">
+                    <div class="m-stat-card">
+                        <div class="m-stat-label">Active Listed Lots</div>
+                        <div class="m-stat-val" id="mActiveCount">4 Lots</div>
+                    </div>
+                    <div class="m-stat-card">
+                        <div class="m-stat-label">Feedstock Volume</div>
+                        <div class="m-stat-val" id="mVolumeAvailable">1,745 kg</div>
+                    </div>
+                    <div class="m-stat-card">
+                        <div class="m-stat-label">Materials Diverted</div>
+                        <div class="m-stat-val" id="mVolumeTraded">0 kg</div>
+                    </div>
+                    <div class="m-stat-card">
+                        <div class="m-stat-label">Circulated Valuation</div>
+                        <div class="m-stat-val text-green" id="mValueTraded">$1,043.00</div>
+                    </div>
+                </div>
+
+                <!-- Filter Chips -->
+                <div class="filter-chips-bar">
+                    <span class="chips-label">Filter Material:</span>
+                    <div class="chips-group" id="marketFilterChips">
+                        <button class="chip active" data-mat="" onclick="filterMarketplaceByMaterial('')">All Materials</button>
+                        <button class="chip" data-mat="plastic" onclick="filterMarketplaceByMaterial('plastic')">Plastics</button>
+                        <button class="chip" data-mat="metal" onclick="filterMarketplaceByMaterial('metal')">Metals</button>
+                        <button class="chip" data-mat="paper" onclick="filterMarketplaceByMaterial('paper')">Paper / Cardboard</button>
+                        <button class="chip" data-mat="e_waste" onclick="filterMarketplaceByMaterial('e_waste')">E-Waste</button>
+                    </div>
+                </div>
+
+                <!-- Marketplace Grid -->
+                <div id="marketplaceGrid" class="marketplace-grid">
+                    <div class="loading-spinner"><div class="spinner"></div></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Schedule Pickup Modal -->
+    <div id="schedulePickupModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Schedule Doorstep Waste Pickup</h3>
+                <button class="close-modal-btn" onclick="closeScheduleModal()">&times;</button>
+            </div>
+            <form id="schedulePickupForm" onsubmit="handleSchedulePickupSubmit(event)">
+                <div class="form-group">
+                    <label for="pickupAddress">Pickup Address</label>
+                    <input type="text" id="pickupAddress" placeholder="e.g. 742 Evergreen Terrace, Sector 5" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pickupDate">Preferred Date</label>
+                        <input type="date" id="pickupDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickupSlot">Preferred Slot</label>
+                        <select id="pickupSlot" class="select-input">
+                            <option value="09:00 - 12:00">Morning (09:00 - 12:00)</option>
+                            <option value="12:00 - 15:00">Afternoon (12:00 - 15:00)</option>
+                            <option value="15:00 - 18:00">Evening (15:00 - 18:00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Materials for Collection</label>
+                    <div class="materials-checkbox-grid">
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="plastic" checked> <span>Plastic Bottles & Packaging</span></label>
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="paper" checked> <span>Cardboard & Paper</span></label>
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="metal"> <span>Metal Cans & Scrap</span></label>
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="e_waste"> <span>Electronics / E-Waste</span></label>
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="glass"> <span>Glass Bottles</span></label>
+                        <label class="check-pill"><input type="checkbox" name="pickupMaterials" value="organic"> <span>Compostable Organic</span></label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pickupEstimatedWeight">Est. Weight (kg)</label>
+                        <input type="number" id="pickupEstimatedWeight" step="0.5" min="1" value="5.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickupFacilitySelect">Assigned Recycler (Optional)</label>
+                        <select id="pickupFacilitySelect" class="select-input">
+                            <option value="">Auto-Dispatch Nearest Recycler</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pickupInstructions">Gate / Access Instructions</label>
+                    <textarea id="pickupInstructions" rows="2" placeholder="e.g. Ring buzzer 4B, items bagged at doorstep"></textarea>
+                </div>
+                <div class="form-actions" style="margin-top: 1.25rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeScheduleModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="scheduleSubmitBtn">
+                        <span>Confirm Pickup</span>
+                        <div class="btn-loader" id="scheduleLoader" style="display:none"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Marketplace Listing Modal -->
+    <div id="createListingModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>List Recyclable Material Batch</h3>
+                <button class="close-modal-btn" onclick="closeCreateListingModal()">&times;</button>
+            </div>
+            <form id="createListingForm" onsubmit="handleCreateListingSubmit(event)">
+                <div class="form-group">
+                    <label for="listingTitle">Lot / Batch Title</label>
+                    <input type="text" id="listingTitle" placeholder="e.g. Sorted HDPE Flakes & Granules (250 kg)" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="listingMaterial">Material Category</label>
+                        <select id="listingMaterial" class="select-input" required>
+                            <option value="plastic">Plastics (PET, HDPE, PP)</option>
+                            <option value="metal">Metals (Copper, Aluminum, Steel)</option>
+                            <option value="paper">Paper & OCC Cardboard</option>
+                            <option value="e_waste">E-Waste & Circuit Boards</option>
+                            <option value="glass">Glass Cullet</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="listingSubType">Sub-Type / Grade</label>
+                        <input type="text" id="listingSubType" placeholder="e.g. Clean Washed Flakes">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="listingQuantity">Quantity (kg)</label>
+                        <input type="number" id="listingQuantity" step="1" min="1" value="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="listingPricePerKg">Asking Price / kg ($)</label>
+                        <input type="number" id="listingPricePerKg" step="0.01" min="0.01" value="0.30" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="listingAddress">Pickup Facility / Location</label>
+                    <input type="text" id="listingAddress" placeholder="e.g. Sector 9 Logistics Hub, Bay 3" required>
+                </div>
+                <div class="form-group">
+                    <label for="listingDesc">Description & Loading Specifics</label>
+                    <textarea id="listingDesc" rows="2" placeholder="e.g. Baled, forklift accessible, dry storage kept"></textarea>
+                </div>
+                <div class="form-actions" style="margin-top: 1.25rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeCreateListingModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="createListingBtn">
+                        <span>Publish Lot to Marketplace</span>
+                        <div class="btn-loader" id="createListingLoader" style="display:none"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Place Offer Modal -->
+    <div id="placeOfferModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Submit Commercial Purchase Bid</h3>
+                <button class="close-modal-btn" onclick="closePlaceOfferModal()">&times;</button>
+            </div>
+            <form id="placeOfferForm" onsubmit="handlePlaceOfferSubmit(event)">
+                <input type="hidden" id="bidListingId">
+                <div class="form-group">
+                    <label>Selected Batch Lot</label>
+                    <div id="bidListingTitle" style="font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">-</div>
+                    <div id="bidListingInfo" style="font-size: 0.85rem; color: var(--text-muted);">-</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bidPricePerKg">Offered Price / kg ($)</label>
+                        <input type="number" id="bidPricePerKg" step="0.01" min="0.01" oninput="calculateBidTotal()" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bidTotalAmount">Total Bid Amount ($)</label>
+                        <input type="number" id="bidTotalAmount" step="0.01" readonly style="background: rgba(255,255,255,0.03);">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bidMessage">Transporter Notes / Pickup Offer</label>
+                    <textarea id="bidMessage" rows="2" placeholder="e.g. Can dispatch 5-ton flatbed truck tomorrow at 10 AM"></textarea>
+                </div>
+                <div class="form-actions" style="margin-top: 1.25rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closePlaceOfferModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="placeOfferBtn">
+                        <span>Submit Official Bid</span>
+                        <div class="btn-loader" id="placeOfferLoader" style="display:none"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

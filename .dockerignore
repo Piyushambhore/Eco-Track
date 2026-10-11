@@ -1,0 +1,17 @@
+.git
+.gitignore
+.gradle
+build/
+androidApp/
+.idea/
+*.iml
+.env
+.env.local
+progress.md
+phases.md
+arch.md
+future.md
+project.md
+ui.md
+README.md
+*.log

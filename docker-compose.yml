@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  ecotrack-db:
+    image: postgres:16-alpine
+    container_name: ecotrack-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ecotrack
+      POSTGRES_USER: ecotrack_admin
+      POSTGRES_PASSWORD: ecotrack_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecotrack_admin -d ecotrack"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ecotrack-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecotrack-api
+    restart: always
+    depends_on:
+      ecotrack-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      ENVIRONMENT: production
+      DB_HOST: ecotrack-db
+      DB_PORT: 5432
+      DB_NAME: ecotrack
+      DB_USER: ecotrack_admin
+      DB_PASSWORD: ecotrack_secure_password_2026
+      JWT_SECRET: super_secure_production_jwt_signing_secret_ecotrack_2026
+      JWT_ISSUER: https://api.ecotrack.org
+      JWT_AUDIENCE: https://app.ecotrack.org
+
+volumes:
+  postgres_data:
